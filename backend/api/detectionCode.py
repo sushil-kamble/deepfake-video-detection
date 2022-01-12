@@ -1,37 +1,33 @@
 import cv2
-# To recognise face from extracted frames
-import face_recognition
-import numpy as np
-# Used for DL applications, computer vision related processes
-import torch
-from django.http import HttpResponse
-from django.shortcuts import render
-# 'nn' Help us in creating & training of neural network
-from torch import nn
 from torch.utils.data.dataset import Dataset
+import numpy as np
+import face_recognition
+from torch import nn  # 'nn' Help us in creating & training of neural network
 # Contains definition for models for addressing different tasks i.e. image classification, object detection e.t.c.
 from torchvision import models
+# Used for DL applications, computer vision related processes
+import torch
 # For image preprocessing
 from torchvision import transforms
 
-from base.forms import VideoForm
-from base.functions import handle_uploaded_file
 
-im_size = 112
-
-# std is used in conjunction with mean to summarize continuous data
-mean = [0.485, 0.456, 0.406]
-
-# provides the measure of dispersion of image grey level intensities
-std = [0.229, 0.224, 0.225]
-
-# Often used as the last layer of a nn to produce the final output
-sm = nn.Softmax()
-
-# Normalising our dataset using mean and std
-inv_normalize = transforms.Normalize(mean=-1 * np.divide(mean, std), std=np.divide([1, 1, 1], std))
+def handle_uploaded_file(f):
+    with open('uploaded_file/' + f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
+# Extract images from a video
+def frame_extract(path):
+    vidObj = cv2.VideoCapture(path)
+    success = 1
+    while success:
+        success, image = vidObj.read()
+        if success:
+            yield image
+
+
+# Model Main Class
 class Model(nn.Module):
     def __init__(self, num_classes, latent_dim=2048, lstm_layers=1, hidden_dim=2048, bidirectional=False):
         super(Model, self).__init__()
@@ -70,18 +66,6 @@ class Model(nn.Module):
         return fmap, self.dp(self.linear1(x_lstm[:, -1, :]))
 
 
-# For image manipulation
-def im_convert(tensor):
-    image = tensor.to("cpu").clone().detach()
-    image = image.squeeze()
-    image = inv_normalize(image)
-    image = image.numpy()
-    image = image.transpose(1, 2, 0)
-    image = image.clip(0, 1)
-    cv2.imwrite('./2.png', image * 255)
-    return image
-
-
 # For prediction of output
 def predict(model, img, path='./'):
     # use this command for gpu
@@ -89,6 +73,7 @@ def predict(model, img, path='./'):
     fmap, logits = model(img.to())
     params = list(model.parameters())
     weight_softmax = model.linear1.weight.detach().cpu().numpy()
+    sm = nn.Softmax()
     logits = sm(logits)
     _, prediction = torch.max(logits, 1)
     confidence = logits[:, int(prediction.item())].item() * 100
@@ -96,7 +81,6 @@ def predict(model, img, path='./'):
     return [int(prediction.item()), confidence]
 
 
-# To validate the dataset
 class validation_dataset(Dataset):
     def __init__(self, video_names, sequence_length=60, transform=None):
         self.video_names = video_names
@@ -113,7 +97,7 @@ class validation_dataset(Dataset):
         frames = []
         a = int(100 / self.count)
         first_frame = np.random.randint(0, a)
-        for i, frame in enumerate(self.frame_extract(video_path)):
+        for i, frame in enumerate(frame_extract(video_path)):
             faces = face_recognition.face_locations(frame)
             try:
                 top, right, bottom, left = faces[0]
@@ -126,15 +110,6 @@ class validation_dataset(Dataset):
         frames = torch.stack(frames)
         frames = frames[:self.count]
         return frames.unsqueeze(0)
-
-    # To extract number of frames
-    def frame_extract(self, path):
-        vidObj = cv2.VideoCapture(path)
-        success = 1
-        while success:
-            success, image = vidObj.read()
-            if success:
-                yield image
 
 
 def detectFakeVideo(videoPath):
@@ -164,33 +139,3 @@ def detectFakeVideo(videoPath):
         else:
             print("FAKE")
     return prediction
-
-
-# Create your views here.
-
-def home(request):
-    a = 5
-    return render(request, 'index.html', {'data': a})
-
-
-def detect(request):
-    if request.method == "POST":
-        form = VideoForm(request.POST, request.FILES)
-        if form.is_valid():
-            video_name = request.FILES['file']
-            handle_uploaded_file(video_name)
-            print(video_name)
-            prediction = detectFakeVideo(f"uploaded_file/{video_name}")
-            print(prediction)
-            if prediction[0] == 0:
-                output = "FAKE"
-            else:
-                output = "REAL"
-            confidence = prediction[1]
-            data = {'output': output, 'confidence': confidence}
-            return render(request, "accuracy.html", data)
-    else:
-        form = VideoForm()
-        return render(request, "detect.html", {'form': form})
-
-    return render(request, 'detect.html')
