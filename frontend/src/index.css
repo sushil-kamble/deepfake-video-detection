@@ -1,13 +1,50 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-xl font-heading md:text-3xl;
+  }
+  h2 {
+    @apply text-lg md:text-2xl;
+  }
+  h3 {
+    @apply text-base md:text-xl;
+  }
+  hr {
+    @apply my-1 border-t border-2 border-primary bg-primary;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  @apply font-body;
+}
+
+.t-page-container {
+  @apply lg:container lg:mx-auto md:px-20 2xl:px-40;
+}
+
+.t-btn {
+  @apply px-2 py-1 bg-opacity-95 hover:bg-opacity-80 rounded shadow-md;
+}
+
+.t-page-x-adj {
+  @apply px-2 md:px-0;
+}
+
+.t-transition-effect {
+  @apply transition duration-500 ease-in-out;
+}
+
+.t-input {
+  @apply shadow
+    appearance-none
+    border
+    rounded
+    w-full
+    p-3
+    text-black
+    leading-tight
+    focus:outline-none;
 }
