@@ -1,24 +1,12 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from django.http import JsonResponse
-
-from api.detectionCode import handle_uploaded_file, detectFakeVideo
-
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['username'] = user.username
-        # ...
-
-        return token
+from rest_framework import generics
+from django.contrib.auth.models import User
+from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
+from api.detectionCode import handle_uploaded_file, detectFakeVideo
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -28,13 +16,22 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(['GET'])
 def getRoutes(request):
     routes = [
-        '/api/token',
-        '/api/token/refresh'
+        '/api/login',
+        '/api/register',
+        '/api/refresh-token',
+        '/api/detection'
     ]
     return Response(routes)
 
 
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
+
+
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def detection_api(request):
     if request.method == 'GET':
         data = {'b': 60, 'c': 'red'}
