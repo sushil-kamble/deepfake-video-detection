@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
 from api.detectionCode import handle_uploaded_file, detectFakeVideo
 
+from .models import Detection
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -34,8 +36,8 @@ class RegisterView(generics.CreateAPIView):
 @permission_classes([IsAuthenticated])
 def detection_api(request):
     if request.method == 'GET':
-        data = {'b': 60, 'c': 'red'}
-        return Response({'accuracy': data}, status=status.HTTP_200_OK)
+        data = {'b': 60, 'username': request.user.id}
+        return Response({'response': data}, status=status.HTTP_200_OK)
     elif request.method == 'POST':
         up_file = request.FILES.get('file')
         handle_uploaded_file(up_file)
@@ -47,5 +49,11 @@ def detection_api(request):
             output = "REAL"
         confidence = prediction[1]
         data = {'output': output, 'confidence': confidence}
-        return Response({'accuracy': data}, status=status.HTTP_200_OK)
+        try:
+            entry = Detection(author=request.user, file_name=up_file, result=data['output'],
+                              confidence=data['confidence'])
+            entry.save()
+        except ValueError as e:
+            return Response({'response': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'response': data}, status=status.HTTP_200_OK)
     return Response({}, status.HTTP_400_BAD_REQUEST)
