@@ -1,7 +1,9 @@
+import React from "react";
+
 const Home = () => {
   return (
-    <div className="flex-1 bg-primary text-white grid place-items-center">
-      <h1>This is Home Page</h1>
+    <div>
+      <p>You are on home page!</p>
     </div>
   );
 };

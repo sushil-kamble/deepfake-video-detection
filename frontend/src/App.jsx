@@ -1,6 +1,13 @@
+import React from "react";
+import "./index.css";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import PrivateRoute from "./utils/PrivateRoute";
+
+import { AuthProvider } from "./context/AuthContext";
+
 import Home from "./views/home";
 import About from "./views/about";
 import Login from "./views/login";
@@ -30,6 +37,16 @@ function App() {
           </Route>
         </Switch>
         <Footer />
+
+        {/*<AuthProvider>
+          <Navbar />
+          <PrivateRoute component={Detection} path="/detection" exact />
+          <Route component={Login} path="/login" />
+          <Route component={Register} path="/register" />
+          <Route component={Home} path="/home" />
+          <Route component={About} path="/about" />
+          <Footer />
+        </AuthProvider>*/}
       </div>
     </Router>
   );

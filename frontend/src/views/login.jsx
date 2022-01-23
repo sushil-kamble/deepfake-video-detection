@@ -1,9 +1,18 @@
-function Login() {
+import React, { useContext } from "react";
+import AuthContext from "../context/AuthContext";
+
+const Login = () => {
+  let { loginUser } = useContext(AuthContext);
   return (
     <div>
-      <h1>This is login page</h1>
+      <h2>login pg</h2>
+      <form onSubmit={loginUser}>
+        <input type="text" name="username" placeholder="Enter Username" />
+        <input type="password" name="password" placeholder="Enter Password" />
+        <input type="submit" />
+      </form>
     </div>
   );
-}
+};
 
 export default Login;
