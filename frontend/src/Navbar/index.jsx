@@ -14,7 +14,12 @@ const Navbar = () => {
               <Link to="/">Home</Link>
               <Link to="/about">About</Link>
               <Link to="/detection">Detection</Link>
-              <button onClick={logoutUser}>Logout</button>
+              <button
+                onClick={logoutUser}
+                className="t-btn bg-error text-white"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <>
