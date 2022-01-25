@@ -1,13 +1,20 @@
-import React, { useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import { Button, Input } from "@mui/material";
+
 function Detection() {
-  const { logoutUser } = useContext(AuthContext);
   return (
     <div>
       <h1>This is Detection page</h1>
-      <button onClick={logoutUser} className="t-btn text-white bg-red-600">
-        Logout
-      </button>
+      <label htmlFor="contained-button-file">
+        <Input
+          accept="image/*"
+          id="contained-button-file"
+          multiple
+          type="file"
+        />
+        <Button variant="contained" component="span">
+          Upload
+        </Button>
+      </label>
     </div>
   );
 }
