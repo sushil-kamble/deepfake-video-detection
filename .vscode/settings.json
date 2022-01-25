@@ -12,7 +12,7 @@
       "splitTerminals": [
         {
           "name": "Client",
-          "commands": ["cd frontend", "yarn start"]
+          "commands": ["cd frontend"]
         }
       ]
     }
