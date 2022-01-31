@@ -12,7 +12,7 @@ from torchvision import transforms
 
 
 def handle_uploaded_file(f):
-    with open('uploaded_file/' + f.name, 'wb+') as destination:
+    with open(f.name, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -77,7 +77,8 @@ def predict(model, img, path='./'):
     logits = sm(logits)
     _, prediction = torch.max(logits, 1)
     confidence = logits[:, int(prediction.item())].item() * 100
-    print('confidence of prediction: ', logits[:, int(prediction.item())].item() * 100)
+    print('confidence of prediction: ',
+          logits[:, int(prediction.item())].item() * 100)
     return [int(prediction.item()), confidence]
 
 
@@ -124,12 +125,14 @@ def detectFakeVideo(videoPath):
         transforms.Normalize(mean, std)])
     path_to_videos = [videoPath]
 
-    video_dataset = validation_dataset(path_to_videos, sequence_length=20, transform=train_transforms)
+    video_dataset = validation_dataset(
+        path_to_videos, sequence_length=20, transform=train_transforms)
     # use this command for gpu
     # model = Model(2).cuda()
     model = Model(2)
     path_to_model = 'model/df_model.pt'
-    model.load_state_dict(torch.load(path_to_model, map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load(
+        path_to_model, map_location=torch.device('cpu')))
     model.eval()
     for i in range(0, len(path_to_videos)):
         print(path_to_videos[i])

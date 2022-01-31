@@ -2,29 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f29ca788-28f6-4108-865c-6096bce9e2ac" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deepfake_detection.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deepfake_detection/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deepfake_detection/asgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deepfake_detection/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deepfake_detection/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deepfake_detection/wsgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/detectionCode.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/detectionCode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +22,9 @@
         <option value="HTML File" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -109,6 +92,7 @@
       <workItem from="1641826223867" duration="1368000" />
       <workItem from="1641898430505" duration="10915000" />
       <workItem from="1641924233272" duration="18000" />
+      <workItem from="1643192532645" duration="11000" />
     </task>
     <servers />
   </component>
