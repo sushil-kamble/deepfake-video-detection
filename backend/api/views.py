@@ -41,7 +41,7 @@ def detection_api(request):
     elif request.method == 'POST':
         up_file = request.FILES.get('file')
         handle_uploaded_file(up_file)
-        prediction = detectFakeVideo(f"uploaded_file/{up_file}")
+        prediction = detectFakeVideo(f"{up_file}")
         print(prediction)
         if prediction[0] == 0:
             output = "FAKE"
