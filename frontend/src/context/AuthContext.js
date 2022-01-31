@@ -45,6 +45,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const registerUser = async (username, password, password2) => {
+    const response = await fetch("http://127.0.0.1:8000/api/register/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        password2
+      })
+    });
+    if (response.status === 201) {
+      history.push("/login");
+    } else {
+      alert("Something went wrong!");
+    }
+  };
+
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
@@ -77,10 +96,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const contextData = {
-    user: user,
-    authTokens: authTokens,
-    loginUser: loginUser,
-    logoutUser: logoutUser
+    user,
+    authTokens,
+    registerUser,
+    loginUser,
+    logoutUser
   };
 
   useEffect(() => {

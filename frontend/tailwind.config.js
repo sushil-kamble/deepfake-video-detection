@@ -10,7 +10,8 @@ module.exports = {
       },
       colors: {
         primary: colors.sky["600"],
-        secondary: colors.gray["600"]
+        secondary: colors.gray["600"],
+        error: colors.red["600"]
       }
     }
   },

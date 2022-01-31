@@ -15,8 +15,8 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen overflow-hidden">
-        <Navbar />
         <AuthProvider>
+          <Navbar />
           <Switch>
             <PrivateRoute component={Detection} path="/detection" exact />
             <Route component={Login} path="/login" />

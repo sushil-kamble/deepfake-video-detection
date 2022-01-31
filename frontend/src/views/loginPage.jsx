@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 
 const LoginPage = () => {
   const { loginUser } = useContext(AuthContext);
   return (
-    <div className="w-full md:w-1/2 mx-auto mt-12">
+    <section className="w-full md:w-1/2 mx-auto mt-12">
       <form
         onSubmit={loginUser}
         className="p-6 bg-slate-100 rounded-md shadow-md"
@@ -33,7 +33,7 @@ const LoginPage = () => {
           Login
         </button>
       </form>
-    </div>
+    </section>
   );
 };
 
