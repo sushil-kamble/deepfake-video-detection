@@ -21,17 +21,17 @@ export const AuthProvider = ({ children }) => {
 
   const history = useHistory();
 
-  const loginUser = async e => {
+  const loginUser = async (e) => {
     e.preventDefault();
     const response = await fetch("http://127.0.0.1:8000/api/login/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         username: e.target.username.value,
-        password: e.target.password.value
-      })
+        password: e.target.password.value,
+      }),
     });
     const data = await response.json();
 
@@ -49,13 +49,13 @@ export const AuthProvider = ({ children }) => {
     const response = await fetch("http://127.0.0.1:8000/api/register/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         username,
         password,
-        password2
-      })
+        password2,
+      }),
     });
     if (response.status === 201) {
       history.push("/login");
@@ -71,53 +71,22 @@ export const AuthProvider = ({ children }) => {
     history.push("/");
   };
 
-  const updateToken = async () => {
-    const response = await fetch("http://127.0.0.1:8000/api/refresh-token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ refresh: authTokens?.refresh })
-    });
-
-    const data = await response.json();
-
-    if (response.status === 200) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-    } else {
-      logoutUser();
+  useEffect(() => {
+    if (authTokens) {
+      setUser(jwt_decode(authTokens.access));
     }
-
-    if (loading) {
-      setLoading(false);
-    }
-  };
+    setLoading(false);
+  }, [authTokens, loading]);
 
   const contextData = {
     user,
+    setUser,
     authTokens,
+    setAuthTokens,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
   };
-
-  useEffect(() => {
-    if (loading) {
-      updateToken();
-    }
-
-    const fourMinutes = 1000 * 60 * 4;
-
-    const interval = setInterval(() => {
-      if (authTokens) {
-        updateToken();
-      }
-    }, fourMinutes);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authTokens, loading]);
 
   return (
     <AuthContext.Provider value={contextData}>
