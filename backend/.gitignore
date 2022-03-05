@@ -139,4 +139,4 @@ dmypy.json
 cython_debug/
 .idea
 model
-uploaded_file
+uploads

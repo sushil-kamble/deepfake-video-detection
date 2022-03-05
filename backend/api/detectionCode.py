@@ -12,7 +12,7 @@ from torchvision import transforms
 
 
 def handle_uploaded_file(f):
-    with open(f.name, 'wb+') as destination:
+    with open('uploads/' + f.name, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
