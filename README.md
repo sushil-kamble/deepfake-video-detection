@@ -14,7 +14,9 @@ git clone https://github.com/sushil-kamble/deepfake-video-detection
 
 ### 1. Go to the root folder and perform the following commands:
 
-`cd backend\`
+- `cd backend\`
+- `mkdir uploads && mkdir model`
+- Add Trained `model` inside model folder. [Download Link](https://drive.google.com/file/d/1HGHSCCW3TwjWjXc36PBr0KCYP56Py-ew/view?usp=sharing)
 
 ### 2. Create and activate the virtual environment
 

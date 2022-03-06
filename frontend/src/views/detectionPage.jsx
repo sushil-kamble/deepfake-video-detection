@@ -1,32 +1,26 @@
-import { Button, styled } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import Results from "../Components/Results";
 import useAxios from "../utils/useAxios";
 
 function Detection() {
-  const [file, setFile] = useState("");
-  // const [videoSrc, setVideoSrc] = useState("");
+  const [file, setFile] = useState(null);
+
   const videoRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const api = useAxios();
 
-  // useEffect(() => {
-  //   const src = URL.createObjectURL(new Blob([file]), { type: "video/mp4" });
-  //   setVideoSrc(src);
-
-  // }, [file]);
-
-  const handleUploadFile = (e) => {
+  const handleUploadFile = e => {
     const uploadedVideo = e.target.files[0];
     setFile(uploadedVideo);
     const output = document.getElementById("output");
     output.src = URL.createObjectURL(uploadedVideo);
     output.onload = function () {
-      URL.revokeObjectURL(output.src); // free memory
+      URL.revokeObjectURL(output.src);
     };
   };
 
-  const submitVideo = async (e) => {
+  const submitVideo = async e => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
@@ -34,8 +28,8 @@ function Detection() {
     try {
       const response = await api.post("/detection/", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-        },
+          "Content-Type": "multipart/form-data"
+        }
       });
       setLoading(false);
       setResult(response.data.response);
@@ -45,46 +39,36 @@ function Detection() {
     }
   };
 
-  const Input = styled("input")({
-    display: "none",
-  });
-
   return (
     <section className="px-4">
-      <h1>This is Detection page</h1>
+      <h1>Video Detection</h1>
+      <hr className="mb-4" />
       <form onSubmit={submitVideo}>
         <label htmlFor="contained-button-file">
-          <Input
+          <input
             accept="video/mp4,video/x-m4v,video/*"
             id="contained-button-file"
             ref={videoRef}
-            onChange={(e) => handleUploadFile(e)}
+            className="my-2"
+            onChange={e => handleUploadFile(e)}
             type="file"
           />
-          <Button variant="contained" component="span">
-            Upload
-          </Button>
         </label>
-        <Button variant="contained" type="submit">
-          Submit
-        </Button>
-        {/* {file && (
-          <h1>
-            {file.name} - {videoSrc}
-          </h1>
-        )} */}
-        <video id="output" width="320" height="240" controls>
+        <video id="output" className="aspect-video w-1/2 my-4" controls>
           Your browser does not support the video tag.
         </video>
+        <button
+          className={`t-btn bg-primary text-white text-3xl`}
+          disabled={!file || loading}
+        >
+          {!file ? "Select the video first" : "Test the video"}
+        </button>
       </form>
-      <div>
-        Results:
+      <div className="mt-4">
         {loading ? (
           <h2>Loading...</h2>
         ) : (
-          <h2>
-            Result: {result?.output} Confidence: {result?.confidence}
-          </h2>
+          <Results result={result?.output} confidence={result?.confidence} />
         )}
       </div>
     </section>
