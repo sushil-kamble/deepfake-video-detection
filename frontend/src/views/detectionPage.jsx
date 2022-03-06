@@ -4,16 +4,27 @@ import useAxios from "../utils/useAxios";
 
 function Detection() {
   const [file, setFile] = useState("");
-  const [videoSrc, setVideoSrc] = useState("");
+  // const [videoSrc, setVideoSrc] = useState("");
   const videoRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const api = useAxios();
 
-  useEffect(() => {
-    const src = URL.createObjectURL(new Blob([file]), { type: "video/mp4" });
-    setVideoSrc(src);
-  }, [file]);
+  // useEffect(() => {
+  //   const src = URL.createObjectURL(new Blob([file]), { type: "video/mp4" });
+  //   setVideoSrc(src);
+
+  // }, [file]);
+
+  const handleUploadFile = (e) => {
+    const uploadedVideo = e.target.files[0];
+    setFile(uploadedVideo);
+    const output = document.getElementById("output");
+    output.src = URL.createObjectURL(uploadedVideo);
+    output.onload = function () {
+      URL.revokeObjectURL(output.src); // free memory
+    };
+  };
 
   const submitVideo = async (e) => {
     e.preventDefault();
@@ -47,7 +58,7 @@ function Detection() {
             accept="video/mp4,video/x-m4v,video/*"
             id="contained-button-file"
             ref={videoRef}
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={(e) => handleUploadFile(e)}
             type="file"
           />
           <Button variant="contained" component="span">
@@ -57,11 +68,14 @@ function Detection() {
         <Button variant="contained" type="submit">
           Submit
         </Button>
-        {file && (
+        {/* {file && (
           <h1>
             {file.name} - {videoSrc}
           </h1>
-        )}
+        )} */}
+        <video id="output" width="320" height="240" controls>
+          Your browser does not support the video tag.
+        </video>
       </form>
       <div>
         Results:

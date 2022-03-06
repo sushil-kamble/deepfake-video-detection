@@ -130,7 +130,7 @@ def detectFakeVideo(videoPath):
     # use this command for gpu
     # model = Model(2).cuda()
     model = Model(2)
-    path_to_model = 'model/df_model.pt'
+    path_to_model = 'model/new_model.pt'
     model.load_state_dict(torch.load(
         path_to_model, map_location=torch.device('cpu')))
     model.eval()
