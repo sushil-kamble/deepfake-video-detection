@@ -7,7 +7,9 @@ const Navbar = () => {
   return (
     <nav>
       <div className="flex items-center justify-between flex-wrap bg-gray-800 p-3 text-white">
-        <h1>DeepFake Detection</h1>
+        <Link to="/">
+          <h1 className="hover:cursor-pointer">DeepFake Detection</h1>
+        </Link>
         <div className="space-x-4">
           {user ? (
             <>

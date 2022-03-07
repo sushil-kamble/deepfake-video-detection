@@ -10,7 +10,7 @@ function Detection() {
   const [result, setResult] = useState(null);
   const api = useAxios();
 
-  const handleUploadFile = e => {
+  const handleUploadFile = (e) => {
     const uploadedVideo = e.target.files[0];
     setFile(uploadedVideo);
     const output = document.getElementById("output");
@@ -20,7 +20,7 @@ function Detection() {
     };
   };
 
-  const submitVideo = async e => {
+  const submitVideo = async (e) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
@@ -28,8 +28,8 @@ function Detection() {
     try {
       const response = await api.post("/detection/", formData, {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
       setLoading(false);
       setResult(response.data.response);
@@ -50,7 +50,7 @@ function Detection() {
             id="contained-button-file"
             ref={videoRef}
             className="my-2"
-            onChange={e => handleUploadFile(e)}
+            onChange={(e) => handleUploadFile(e)}
             type="file"
           />
         </label>
