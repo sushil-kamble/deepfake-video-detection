@@ -18,7 +18,7 @@
 }
 
 body {
-  @apply font-body;
+  @apply font-body bg-slate-200;
 }
 
 .t-page-container {
