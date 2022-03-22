@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import Results from "../Components/Results";
 import useAxios from "../utils/useAxios";
-import { LineWave, TailSpin } from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
 
 function Detection() {
   const [file, setFile] = useState(null);
@@ -42,27 +42,36 @@ function Detection() {
 
   return (
     <section className="px-4">
-      <h1>Video Detection</h1>
-      <hr className="mb-4" />
-      <div className="flex justify-between h-[60vh] space-x-2">
+      <h1 className="text-center">Video Detection</h1>
+      <hr className="mb-2" />
+      <div>
         <form
           onSubmit={submitVideo}
-          className="flex-1 w-1/2 rounded-xl shadow-md p-4 bg-white"
+          className="w-2/3 mx-auto rounded-xl shadow-md bg-slate-50 p-4"
         >
-          <p>Select a video file to detect Fake or Real</p>
-          <label htmlFor="contained-button-file">
-            <input
-              accept="video/mp4,video/x-m4v,video/*"
-              id="contained-button-file"
-              ref={videoRef}
-              className="my-2"
-              onChange={e => handleUploadFile(e)}
-              type="file"
-            />
-          </label>
-          <video id="output" className="w-full mt-4" controls>
-            Your browser does not support the video tag.
-          </video>
+          <div className="bg-white p-2 rounded-lg shadow-lg">
+            <p className="font-semibold">
+              Select a video file to detect Fake or Real
+            </p>
+            <label htmlFor="contained-button-file">
+              <input
+                accept="video/mp4,video/x-m4v,video/*"
+                id="contained-button-file"
+                ref={videoRef}
+                onChange={e => handleUploadFile(e)}
+                type="file"
+              />
+            </label>
+          </div>
+          <div className="flex justify-center">
+            <video
+              id="output"
+              className="w-3/5 max-w-lg mt-2 rounded-lg"
+              controls
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
           <button
             className={`mt-4 t-btn bg-primary text-white text-3xl w-full`}
             disabled={!file || loading}
@@ -70,13 +79,15 @@ function Detection() {
             {!file ? "Select the video first" : "Test the video"}
           </button>
         </form>
-        <div className="w-1/2 flex items-center">
+        <div className="">
           {loading ? (
-            <div className="flex justify-center items-center h-full">
+            <div className="mt-4 flex justify-center items-center h-full">
               <TailSpin ariaLabel="loading-indicator" />
             </div>
           ) : (
-            <Results result={result?.output} confidence={result?.confidence} />
+            result && (
+              <Results result={result.output} confidence={result.confidence} />
+            )
           )}
         </div>
       </div>
