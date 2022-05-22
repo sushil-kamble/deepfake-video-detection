@@ -5,10 +5,12 @@ import face_recognition
 from torch import nn  # 'nn' Help us in creating & training of neural network
 # Contains definition for models for addressing different tasks i.e. image classification, object detection e.t.c.
 from torchvision import models
+import torchvision.transforms as T
 # Used for DL applications, computer vision related processes
 import torch
 # For image preprocessing
 from torchvision import transforms
+from PIL import Image
 
 
 def handle_uploaded_file(f):
@@ -87,6 +89,7 @@ class validation_dataset(Dataset):
         self.video_names = video_names
         self.transform = transform
         self.count = sequence_length
+        self.faceCroppedImages = []
 
     # To get number of videos
     def __len__(self):
@@ -95,6 +98,7 @@ class validation_dataset(Dataset):
     # To get number of frames
     def __getitem__(self, idx):
         video_path = self.video_names[idx]
+        processedFrames = []
         frames = []
         a = int(100 / self.count)
         first_frame = np.random.randint(0, a)
@@ -105,12 +109,45 @@ class validation_dataset(Dataset):
                 frame = frame[top:bottom, left:right, :]
             except:
                 pass
-            frames.append(self.transform(frame))
-            if len(frames) == self.count:
+            frames.append(frame)
+            transformedImg = self.transform(frame)
+            processedFrames.append(transformedImg)
+
+            if len(processedFrames) == self.count:
                 break
-        frames = torch.stack(frames)
-        frames = frames[:self.count]
-        return frames.unsqueeze(0)
+        # define a transform to convert a tensor to PIL image
+        transform = T.ToPILImage()
+        # convert the tensor to PIL image using above transform
+
+        # self.faceCroppedImages = [transform(img) for img in frames]
+        processedFrames = torch.stack(processedFrames)
+        processedFrames = processedFrames[:self.count]
+        return processedFrames.unsqueeze(0)
+
+
+# creating face cropped videos
+def create_face_videos(path, out_dir, sequence_length, transform):
+    frames = []
+    first_frame = 0
+    out = cv2.VideoWriter(out_dir, cv2.VideoWriter_fourcc(
+        'M', 'J', 'P', 'G'), 30, (112, 112))
+    for i, frame in enumerate(frame_extract(path)):
+        faces = face_recognition.face_locations(frame)
+        try:
+            top, right, bottom, left = faces[0]
+            frame = frame[top:bottom, left:right, :]
+            out.write(cv2.resize(
+                frames[i][top:bottom, left:right, :], (112, 112)))
+        except:
+            pass
+        frames.append(transform(frame))
+        if len(frames) == sequence_length:
+            break
+    frames = torch.stack(frames)
+    frames = frames[:sequence_length]
+    out.release()
+    print(frames.unsqueeze(0))
+    return frames.unsqueeze(0)
 
 
 def detectFakeVideo(videoPath):
@@ -125,6 +162,9 @@ def detectFakeVideo(videoPath):
         transforms.Normalize(mean, std)])
     path_to_videos = [videoPath]
 
+    # create_face_videos(
+    #     path_to_videos[0], 'face_cropped/', sequence_length=20, transform=train_transforms)
+
     video_dataset = validation_dataset(
         path_to_videos, sequence_length=20, transform=train_transforms)
     # use this command for gpu
@@ -134,11 +174,12 @@ def detectFakeVideo(videoPath):
     model.load_state_dict(torch.load(
         path_to_model, map_location=torch.device('cpu')))
     model.eval()
+    # for (img, i) in enumerate(face_cropped):
+    #     print(img)
     for i in range(0, len(path_to_videos)):
-        print(path_to_videos[i])
         prediction = predict(model, video_dataset[i], './')
         if prediction[0] == 1:
             print("REAL")
         else:
             print("FAKE")
-    return prediction
+    return (prediction, [])

@@ -1,14 +1,23 @@
 import { useRef, useState } from "react";
-import Results from "../Components/Results";
+import ResultsModal from "../Components/ResultsModal";
 import useAxios from "../utils/useAxios";
-import { TailSpin } from "react-loader-spinner";
 
 function Detection() {
   const [file, setFile] = useState(null);
+  let [isOpen, setIsOpen] = useState(false);
+  const openModal = () => {
+    setIsOpen(true);
+  };
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   const videoRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState({
+    result: "",
+    confidence: 0
+  });
   const api = useAxios();
 
   const handleUploadFile = e => {
@@ -34,6 +43,7 @@ function Detection() {
       });
       setLoading(false);
       setResult(response.data.response);
+      setIsOpen(true);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -76,19 +86,23 @@ function Detection() {
             className={`mt-4 t-btn bg-primary text-white text-3xl w-full`}
             disabled={!file || loading}
           >
-            {!file ? "Select the video first" : "Test the video"}
+            {loading
+              ? "Loading..."
+              : !file
+              ? "Select the video first"
+              : "Test the video"}
           </button>
         </form>
         <div className="">
-          {loading ? (
-            <div className="mt-4 flex justify-center items-center h-full">
-              <TailSpin ariaLabel="loading-indicator" />
-            </div>
-          ) : (
-            result && (
-              <Results result={result.output} confidence={result.confidence} />
-            )
-          )}
+          <ResultsModal
+            file={file}
+            isOpen={isOpen}
+            loading={loading}
+            openModal={openModal}
+            closeModal={closeModal}
+            result={result.output}
+            confidence={result.confidence}
+          />
         </div>
       </div>
     </section>
