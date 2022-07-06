@@ -11,5 +11,6 @@ urlpatterns = [
     path('login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('register/', RegisterView.as_view(), name='auth_register'),
     path('detection/', views.detection_api, name="main-detection"),
+    # path('detection/v2/', views.detection_apiv2, name="main-detection-v2"),
     path('', views.getRoutes)
 ]
